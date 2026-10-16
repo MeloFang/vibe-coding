@@ -29,9 +29,15 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | 仓库初始化、任务状态流转 | `references/repo-setup-and-tasks.md` |
 | 轻量需求对齐（问 4 条就够） | 直接用下方「对齐清单」，不用开文件 |
 | 复杂需求、多轮追问、烤问 | `references/alignment-deep-dive.md` |
-| 写测试、TDD 循环、审查实现 | `references/tdd-playbook.md` |
+| 写测试、TDD 循环、审查实现 | `references/tdd-playbook.md` ★含强制机制 |
 | 设计/重构模块、审查代码质量 | `references/deep-module-design.md` |
 | **代码库体检**（找 bug / 浅模块 / 决策缺口 → HTML 报告） | `references/architecture-review.md` |
+| **会话出问题了，诊断一下** | `references/diagnosing-session.md` ★P0 |
+| **功能做完了，怎么收尾** | `references/finishing-branch.md` ★P0 |
+| **用子 Agent 并行实现** | `references/subagent-driven-development.md` ★P1 |
+| **git worktree 隔离开发** | `references/using-git-worktrees.md` ★P1 |
+| **任务间审查**（每个任务完成后审查） | `references/requesting-code-review.md` ★P2 |
+| **接收审查反馈**（如何响应审查意见） | `references/receiving-code-review.md` ★P2 |
 | 跨会话/跨人接力（生成交接文档） | `references/handoff.md` |
 | 建 `AGENTS.md`（三段式多模型上下文） | `references/AGENTS-template.md` |
 | 建术语表 / ADR | `references/CONTEXT-template.md` |

@@ -81,6 +81,15 @@
 
 ---
 
+## 并行开发
+
+- **小功能**：单分支 + 多 commit
+- **重要功能**：git worktree 隔离（走 `using-git-worktrees.md`）
+- **多 Agent**：每个 Agent 独立 worktree（走 `subagent-driven-development.md`）
+- **同步点**：所有 worktree 完成后，集成测试，合并到 main
+
+---
+
 ## 和 issue tracker 的关系
 
 需要远端协作时（多人、跨仓、公开项目），把 `PLAN.md` 的任务镜像到 GitHub Issues：
