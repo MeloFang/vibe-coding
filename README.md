@@ -94,6 +94,7 @@ my-project/
 
 | 什么时候 | 会出现什么 | 具体动作 |
 |:---|:---|:---|
+| **进入实现前** | GitHub 查重 | 先按 `references/github-scouting.md` 搜现成开源，能抄不写 |
 | **写代码时** | TDD 红 → 绿 → 重构 | 先写失败测试再写实现，**强制流程不是建议** |
 | **卡住 / 出 bug** | 会话诊断 | 建环 → 复现最小化 → 假设 → 插桩 → 修复 → 回归 |
 | **一个功能做完** | 分支收尾 | 验证 → 清理调试代码 → 合并 → 复盘，**不许直接开下一个** |
@@ -170,7 +171,7 @@ my-project/
 
 ### ③ 规划
 
-拆成小步，每步带明确验收。规划阶段**只写指令，不写实现**。
+**先按 `references/github-scouting.md` 在 GitHub 查重（能抄不写）**——动手前确认有没有现成开源可复用。然后再拆成小步，每步带明确验收。规划阶段**只写指令，不写实现**。
 
 ### ④ 分步实现
 
@@ -244,6 +245,7 @@ vibe-coding/
     ├── project-docs.md              # ★ 产品文档 / 实施计划 / 续接文档三份模板
     ├── repo-setup-and-tasks.md      # 仓库初始化清单 + 任务状态机
     ├── alignment-deep-dive.md       # 对齐深挖：设计树 + 前沿多轮追问
+    ├── github-scouting.md           # ★ P1 GitHub 查重：搜现成开源、评估、决策（能抄不写）
     ├── tdd-playbook.md              # ★ TDD：好测试、接缝、三个反模式、循环规则 + 强制机制
     ├── deep-module-design.md        # 深模块词汇：module/interface/depth/seam/adapter
     ├── architecture-review.md       # 代码库体检：bug / 浅模块 / 决策缺口三类发现 → HTML 报告
@@ -273,6 +275,7 @@ vibe-coding/
 | 写测试 / TDD 循环（含强制机制） | `tdd-playbook.md` | ★ P0 |
 | 设计或重构模块 | `deep-module-design.md` | P1 |
 | **代码库体检**（找 bug / 出 HTML 报告） | `architecture-review.md` | P1 |
+| **动手写代码前，先查 GitHub 有无现成开源** | `github-scouting.md` | P1 |
 | **会话出问题了，诊断一下** | `diagnosing-session.md` | ★ P0 |
 | **功能做完了，怎么收尾** | `finishing-branch.md` | ★ P0 |
 | **用子 Agent 并行实现** | `subagent-driven-development.md` | P1 |

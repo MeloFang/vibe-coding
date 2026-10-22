@@ -1,6 +1,6 @@
 ---
 name: vibe-coding
-description: Vibe Coding + Real Engineering 工作流，从立项到交付的完整项目流程 + 单功能编码闭环。当用户说"开个新项目 / 从零做一个东西 / 我要立项 / 走完整流程 / 生成产品文档 / 建项目文档 / 做到哪一步了 / 交接给下个会话"，或想用 AI 做项目/功能、写代码、调试、重构、体检架构、查 bug，或说"按 vibe coding 来 / 先对齐 / 烤问 / grill / 跑 TDD / 写测试 / 诊断这个 bug / 固定上下文 / 体检架构 / 扫代码质量 / 查查有没有 bug / 换人接着做"时使用。融合 vibe-coding-cn（规划驱动、道法术器、单一 AGENTS.md）、mattpocock/skills（设计树对齐、GLOSSARY/ADR、TDD 垂直切片、深模块设计、代码库体检、会话交接、仓库初始化、任务状态机）与 anthropics/skills（frontend-design）。
+description: Vibe Coding + Real Engineering 工作流，从立项到交付的完整项目流程 + 单功能编码闭环。当用户说"开个新项目 / 从零做一个东西 / 我要立项 / 走完整流程 / 生成产品文档 / 建项目文档 / 做到哪一步了 / 交接给下个会话"，或想用 AI 做项目/功能、写代码、调试、重构、体检架构、查 bug，或说"按 vibe coding 来 / 先对齐 / 烤问 / grill / 跑 TDD / 写测试 / 诊断这个 bug / 固定上下文 / 体检架构 / 扫代码质量 / 先搜 github 有没有现成轮子 / 查重 / 查查有没有 bug / 换人接着做"时使用。融合 vibe-coding-cn（规划驱动、道法术器、单一 AGENTS.md）、mattpocock/skills（设计树对齐、GLOSSARY/ADR、TDD 垂直切片、深模块设计、代码库体检、会话交接、仓库初始化、任务状态机）与 anthropics/skills（frontend-design）。
 ---
 
 # Vibe Coding + Real Engineering
@@ -29,6 +29,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | 仓库初始化、任务状态流转 | `references/repo-setup-and-tasks.md` |
 | 轻量需求对齐（问 4 条就够） | 直接用下方「对齐清单」，不用开文件 |
 | 复杂需求、多轮追问、烤问 | `references/alignment-deep-dive.md` |
+| **动手写代码前，先查 GitHub 有无现成轮子（能抄不写）** | `references/github-scouting.md` ★P1 |
 | 写测试、TDD 循环、审查实现 | `references/tdd-playbook.md` ★含强制机制 |
 | 设计/重构模块、审查代码质量 | `references/deep-module-design.md` |
 | **代码库体检**（找 bug / 浅模块 / 决策缺口 → HTML 报告） | `references/architecture-review.md` |
@@ -60,7 +61,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 |:---|:---|:---|
 | ① **立项与产品文档** | `PRODUCT.md` | 成功标准可验证 + **用户确认**（未确认不许进下一阶段） |
 | ② **固定上下文** | `AGENTS.md` + `GLOSSARY.md` + `docs/adr/` | 新 Agent 读完这两份就能开工，不用问基础问题 |
-| ③ **规划** | `PLAN.md` | 每步带验收信号，粒度一天左右，只写指令不写实现 |
+| ③ **规划** | `PLAN.md` | **先 GitHub 查重（见 `references/github-scouting.md`，能抄不写）**；每步带验收信号，粒度一天左右，只写指令不写实现 |
 | ④ **实现** | 代码 + 测试 | 红→绿走完，状态已更新 |
 | ⑤ **验证** | 验收记录 | 对着 `PRODUCT.md` 成功标准逐条核对，**人来下结论** |
 | ⑥ **续接文档** | `HANDOFF.md` | **从①就建，每阶段更新**；讲清"这程序是什么 / 到哪一步 / 怎么接手" |
@@ -86,14 +87,14 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 
 1. **对齐（Grill）** —— 动手前先把"要做什么、不做什么"问清楚。最贵的失败是做错方向。
 2. **固定上下文** —— 把结论写进 `AGENTS.md` / `GLOSSARY.md` / `docs/adr/`，让每轮有据可依（不靠聊天记录记忆）。
-3. **规划** —— 拆成小步、每步带验收（测试或明确信号），只写指令不写实现。
+3. **规划** —— **先按 `references/github-scouting.md` 在 GitHub 查重（能抄不写）**，再拆成小步、每步带验收（测试或明确信号），只写指令不写实现。
 4. **分步实现** —— 一次只改一个模块 / 一步，跑验证；代码一多就切会话（必要时用 `references/handoff.md` 交接）。
 5. **复盘** —— 验证通过再继续；更新上下文 / 进度；可复盘的提交。
 
 ## 道法术器（心法，来自 vibe-coding-cn）
 
 - **道（原则）**：规划就是一切；上下文是第一性（垃圾进垃圾出）；奥卡姆剃刀、帕累托、逆向思考；先结构后代码。
-- **法（方法）**：一句话目标 + 非目标；能抄不写（先问有没有现成仓库 / 库）；接口先行、实现后补；一次只改一个模块；文档即上下文。
+- **法（方法）**：一句话目标 + 非目标；能抄不写（动手前先按 `references/github-scouting.md` 搜 GitHub 有没有现成仓库 / 库）；接口先行、实现后补；一次只改一个模块；文档即上下文。
 - **术（技巧）**：明确"能改什么 / 不能改什么"；Debug 只给"预期 vs 实际 + 最小复现"；测试交给 AI 但断言人审；代码一多就切会话。
 - **器（工具）**：复杂任务选第一梯队模型；Claude Code / Codex / Cursor / WorkBuddy 等 CLI 优先；tmux 多会话、Ollama 本地模型等。
 
