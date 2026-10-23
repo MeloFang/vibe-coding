@@ -51,23 +51,41 @@
 
 ### 逐条实证（最关键的一步，不能省）
 
-子 Agent 每条发现都必须带**证据等级**：
+子 Agent 每条发现都必须带**证据等级**，并映射为**三级裁定**（借鉴 cloudflare/security-audit-skill）：
 
-| 等级 | 含义 | 要求 |
-|:---|:---|:---|
-| **✅ 已验证** | 已经跑过、复现过、或代码路径已逐行核对确认 | 直接采信 |
-| **⚠️ 需实测** | 逻辑上像有问题，但没实际跑过 | **必须自己动手测**，不能直接写进报告 |
-| **💭 推断** | 读代码时的直觉，未验证 | 标为推断，排在最后 |
+| 等级 | 裁定（verdict） | 含义 | 要求 |
+|:---|:---|:---|:---|
+| **✅ 已验证** | `confirmed` | 已经跑过、复现过、或代码路径已逐行核对确认 | 直接采信 |
+| **⚠️ 需实测** | `needs_validation` | 逻辑上像有问题，但没实际跑过 | **必须自己动手测**，不能直接写进报告 |
+| **💭 推断 / 证伪** | `rejected` | 直觉未验证 / 已被查证排除 | 进「已排除」区，记录否掉的理由 |
 
 **影响正确性的发现，一律要实测复现。** 拿真实数据跑一遍，给出实测证据（输入 → 实际输出 → 期望输出）。不是推理，是复现。
+
+> "没查清"（`needs_validation`）和"查清了是假的"（`rejected`）必须分开记录——前者是待办，后者是结论。混在一起下次体检还会重复劳动。
 
 > 实测时顺手量化**触发频率**：在现有真实数据上跑，命中几次？0 次和 100 次是完全不同优先级。触发 0 次的 bug 优先级会显著下降——但**不是不修**，是"可以晚点修"。
 
 ---
 
-## 阶段二：出HTML 报告
+## 阶段二：出HTML 报告 + findings.json
 
 写**自包含HTML 到系统临时目录**（不要落进仓库），文件名 `architecture-review-<时间戳>.html`。写完为用户打开（Windows `start`；macOS `open`；Linux `xdg-open`），告知绝对路径。
+
+### 同时产出机器可读 findings.json
+
+HTML 给人看，**findings.json 给机器消费**（后续 CI、跨会话对比、自动化跟踪）。与 HTML 放同一临时目录，格式按 `report-schema.json`：
+
+- `meta`：repo、时间戳、范围、`read_only: true`
+- `findings[]`：每条带 `id`（全局连续）、`category`（correctness / architecture / decision_gap）、**`verdict`（confirmed / needs_validation / rejected）**、files（带行号）、problem（具体场景）、evidence（correctness+confirmed 必填）、fix（具体到改哪几处）、hit_count、recommendation、deferred
+- `excluded[]`：判定"不是问题"的，每条带 `kind`（false_positive 误报 / intentional 刻意设计）
+
+**写完必须过校验**（零依赖，标准库即可）：
+
+```bash
+python references/validate_report.py <findings.json>
+```
+
+校验不过（编号断档、confirmed 缺证据、修法含糊）→ 修数据再重跑，不许跳过。校验器自带测试：`python references/test_validate_report.py`（12 项断言，改 schema 时必须全绿）。
 
 ### 报告形式要求
 
@@ -170,6 +188,7 @@
 ## 输出检查清单
 
 - [ ] 报告落在系统临时目录，**没污染仓库**？
+- [ ] **findings.json 已产出且 `validate_report.py` 校验通过**？三级裁定（confirmed / needs_validation / rejected）分布合理？
 - [ ] 三类发现（bug / 架构 / 决策缺口）都覆盖了？分类清楚？
 - [ ] **每条发现都带证据等级**？影响正确性的都**实测复现**了？
 - [ ] bug 类都给了**实测证据**（输入→实际→期望）和**触发频率**？

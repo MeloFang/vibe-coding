@@ -30,6 +30,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | 轻量需求对齐（问 4 条就够） | 直接用下方「对齐清单」，不用开文件 |
 | 复杂需求、多轮追问、烤问 | `references/alignment-deep-dive.md` |
 | **动手写代码前，先查 GitHub 有无现成轮子（能抄不写）** | `references/github-scouting.md` ★P1 |
+| **实现最小化**（决策阶梯 / Never cut / shortcut 约定） | `references/smallest-change.md` ★P1 |
 | 写测试、TDD 循环、审查实现 | `references/tdd-playbook.md` ★含强制机制 |
 | 设计/重构模块、审查代码质量 | `references/deep-module-design.md` |
 | **代码库体检**（找 bug / 浅模块 / 决策缺口 → HTML 报告） | `references/architecture-review.md` |
@@ -88,7 +89,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 1. **对齐（Grill）** —— 动手前先把"要做什么、不做什么"问清楚。最贵的失败是做错方向。
 2. **固定上下文** —— 把结论写进 `AGENTS.md` / `GLOSSARY.md` / `docs/adr/`，让每轮有据可依（不靠聊天记录记忆）。
 3. **规划** —— **先按 `references/github-scouting.md` 在 GitHub 查重（能抄不写）**，再拆成小步、每步带验收（测试或明确信号），只写指令不写实现。
-4. **分步实现** —— 一次只改一个模块 / 一步，跑验证；代码一多就切会话（必要时用 `references/handoff.md` 交接）。
+4. **分步实现** —— 按 `references/smallest-change.md` 的决策阶梯（能不写就不写 → 代码库已有 → 标准库 → 已装依赖 → 一行 → 最小代码）做**最小完整改动**，一次只改一个模块 / 一步，跑验证；代码一多就切会话（必要时用 `references/handoff.md` 交接）。**测试纪律不变：仍按 `tdd-playbook.md` 红在前。**
 5. **复盘** —— 验证通过再继续；更新上下文 / 进度；可复盘的提交。
 
 ## 道法术器（心法，来自 vibe-coding-cn）
@@ -152,6 +153,8 @@ TDD 完整方法论（好测试的标准、接缝、三个反模式、循环规�
 - **`vibe-coding-cn`**（规划驱动、道法术器、单一 `AGENTS.md` 模式）：原仓 [`tradecatlabs/vibe-coding-cn`](https://github.com/tradecatlabs/vibe-coding-cn)（曾用 `tukuaiai/vibe-coding-cn`，已重定向），重点看 `AGENTS.md`、`i18n/zh/prompts/`、`i18n/zh/skills/`。
 - **`mattpocock/skills`**（*Skills For Real Engineers*）：提供本技能大部分方法论内核——设计树对齐（`grilling` / `grill-me` / `grill-with-docs`）、共享语言与领域模型（`domain-modeling`）、TDD 垂直切片（`tdd`）、深模块设计词汇（`codebase-design`）、架构体检（`improve-codebase-architecture`）、会话交接（`handoff`）、仓库初始化（`setup-matt-pocock-skills`）、任务状态机（`triage`）、SKILL.md 写法规范。
 - **`anthropics/skills`**（`frontend-design`）：让 Agent 先定美学方向再写前端，拒绝通用 AI 味设计。
+- **`DietrichGebert/ponytail`**（MIT）：提供 `references/smallest-change.md` 的决策阶梯、Never cut 清单、shortcut 注释约定，以及 `requesting-code-review.md` 的审查三硬规矩与四段式报告格式。（**注意**：ponytail 的"trivial 改动不用测试"不采纳，TDD 红在前不变。）
+- **`cloudflare/security-audit-skill`**（MIT）：提供体检 findings 的三级裁定思想（confirmed / needs_validation / rejected）与"机器可读报告 + schema + 校验器"的产物形态（`report-schema.json` / `validate_report.py`）。
 
 > 本仓库只融合方法论，未复制三者源码或资产。
 

@@ -95,6 +95,7 @@ my-project/
 | 什么时候 | 会出现什么 | 具体动作 |
 |:---|:---|:---|
 | **进入实现前** | GitHub 查重 | 先按 `references/github-scouting.md` 搜现成开源，能抄不写 |
+| **写实现时** | 最小完整改动 | 按 `references/smallest-change.md` 决策阶梯选最小方案，Never cut 清单不裁剪；收尾交代跳过了什么 |
 | **写代码时** | TDD 红 → 绿 → 重构 | 先写失败测试再写实现，**强制流程不是建议** |
 | **卡住 / 出 bug** | 会话诊断 | 建环 → 复现最小化 → 假设 → 插桩 → 修复 → 回归 |
 | **一个功能做完** | 分支收尾 | 验证 → 清理调试代码 → 合并 → 复盘，**不许直接开下一个** |
@@ -175,7 +176,7 @@ my-project/
 
 ### ④ 分步实现
 
-**一次只改一个模块 / 一步**，改完跑验证。代码一多就切会话（新会话先读上下文文件）。
+**先过 `references/smallest-change.md` 的决策阶梯**（能不写就不写 → 代码库已有 → 标准库 → 已装依赖 → 一行 → 最小代码；Never cut 清单永不裁剪）。**一次只改一个模块 / 一步**，改完跑验证。代码一多就切会话（新会话先读上下文文件）。**测试纪律不变：仍按 TDD 红在前。**
 
 ### ⑤ 复盘
 
@@ -246,6 +247,10 @@ vibe-coding/
     ├── repo-setup-and-tasks.md      # 仓库初始化清单 + 任务状态机
     ├── alignment-deep-dive.md       # 对齐深挖：设计树 + 前沿多轮追问
     ├── github-scouting.md           # ★ P1 GitHub 查重：搜现成开源、评估、决策（能抄不写）
+    ├── smallest-change.md           # ★ P1 最小完整改动：决策阶梯 + Never cut + shortcut 约定（改编自 ponytail）
+    ├── report-schema.json           # 体检 findings.json 的机器可读 Schema（三级裁定）
+    ├── validate_report.py           # findings.json 零依赖校验器
+    ├── test_validate_report.py      # 校验器自测（12 项断言）
     ├── tdd-playbook.md              # ★ TDD：好测试、接缝、三个反模式、循环规则 + 强制机制
     ├── deep-module-design.md        # 深模块词汇：module/interface/depth/seam/adapter
     ├── architecture-review.md       # 代码库体检：bug / 浅模块 / 决策缺口三类发现 → HTML 报告
@@ -276,6 +281,7 @@ vibe-coding/
 | 设计或重构模块 | `deep-module-design.md` | P1 |
 | **代码库体检**（找 bug / 出 HTML 报告） | `architecture-review.md` | P1 |
 | **动手写代码前，先查 GitHub 有无现成开源** | `github-scouting.md` | P1 |
+| **实现最小化**（决策阶梯 / Never cut / shortcut 约定） | `smallest-change.md` | P1 |
 | **会话出问题了，诊断一下** | `diagnosing-session.md` | ★ P0 |
 | **功能做完了，怎么收尾** | `finishing-branch.md` | ★ P0 |
 | **用子 Agent 并行实现** | `subagent-driven-development.md` | P1 |
@@ -351,6 +357,8 @@ vibe-coding/
 - **[mattpocock/skills](https://github.com/mattpocock/skills)** —— *Skills For Real Engineers*，提供本技能大部分方法论内核：设计树对齐（`grilling`/`grill-me`/`grill-with-docs`）、共享语言与领域模型（`domain-modeling`）、TDD 垂直切片（`tdd`）、深模块设计词汇（`codebase-design`）、架构体检（`improve-codebase-architecture`）、会话交接（`handoff`）、仓库初始化（`setup-matt-pocock-skills`）、任务状态机（`triage`）、SKILL.md 写法规范。
 - **[obra/superpowers](https://github.com/obra/superpowers)** —— 提供 7 项核心优化：会话诊断、分支收尾、子 Agent 并行开发、Git Worktree 隔离、任务间审查、接收审查反馈、TDD 强制机制。
 - **[anthropics/skills](https://github.com/anthropics/skills)** —— `frontend-design` 技能，让 Agent 先定美学方向再写前端，拒绝通用 AI 味设计。
+- **[DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail)** —— "最懒高级工程师"范式，提供 `smallest-change.md` 的决策阶梯、Never cut 清单、shortcut 注释约定，以及审查报告的四段式格式与三硬规矩（其"trivial 改动不用测试"不采纳，TDD 红在前不变）。
+- **[cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill)** —— 提供体检产物的三级裁定思想（confirmed / needs_validation / rejected）与"机器可读 findings + schema + 零依赖校验器"形态（`report-schema.json` / `validate_report.py` / `test_validate_report.py`）。
 
 > 本仓库只融合方法论，未复制四者源码或资产。
 

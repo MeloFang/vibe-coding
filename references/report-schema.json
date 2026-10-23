@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "vibe-coding-architecture-review-findings",
+  "title": "代码库体检 findings",
+  "description": "vibe-coding 技能 architecture-review 产出的机器可读发现清单。改编借鉴 cloudflare/security-audit-skill 的三级裁定思想，映射到本技能的证据等级。",
+  "type": "object",
+  "required": ["meta", "findings"],
+  "additionalProperties": false,
+  "properties": {
+    "meta": {
+      "type": "object",
+      "required": ["repo", "generated_at", "scope"],
+      "additionalProperties": false,
+      "properties": {
+        "repo": { "type": "string", "description": "被体检的仓库名或目录名" },
+        "generated_at": { "type": "string", "format": "date-time", "description": "ISO 8601 时间戳" },
+        "scope": { "type": "string", "description": "体检范围（用户点名或热点推断的模块/路径）" },
+        "read_only": { "type": "boolean", "const": true, "description": "体检只读声明，必须为 true" }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/finding" }
+    },
+    "excluded": {
+      "type": "array",
+      "description": "判定为「不是问题」的候选，每条写清为什么否",
+      "items": { "$ref": "#/$defs/excluded" }
+    }
+  },
+  "$defs": {
+    "verdict": {
+      "type": "string",
+      "enum": ["confirmed", "needs_validation", "rejected"],
+      "description": "confirmed=已验证(✅，实测/逐行核对)；needs_validation=需实测(⚠️，逻辑上像有问题但未跑过)；rejected=已排除(进入 excluded)"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["correctness", "architecture", "decision_gap"],
+      "description": "correctness=正确性缺陷；architecture=架构摩擦；decision_gap=决策缺口"
+    },
+    "recommendation": {
+      "type": "string",
+      "enum": ["strong", "worth_exploring", "speculative"]
+    },
+    "finding": {
+      "type": "object",
+      "required": ["id", "category", "verdict", "title", "files", "problem", "fix"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "integer", "minimum": 1, "description": "全局连续编号，从 1 开始，不重复" },
+        "category": { "$ref": "#/$defs/category" },
+        "verdict": { "$ref": "#/$defs/verdict" },
+        "title": { "type": "string", "minLength": 4, "description": "一句话标题，说清场景" },
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "涉及文件（带行号），如 src/auth.py:45"
+        },
+        "problem": { "type": "string", "minLength": 10, "description": "具体场景：什么输入/情况下导致什么错误结果或摩擦" },
+        "evidence": { "type": "string", "description": "实测证据（输入→实际→期望）。correctness 类且 verdict=confirmed 时必填" },
+        "hit_count": { "type": ["integer", "null"], "description": "触发频率：现有真实数据上命中几次" },
+        "fix": { "type": "string", "minLength": 8, "description": "修法，具体到改哪几处/换哪个顺序，不许只写'应该重构'" },
+        "regression": { "type": "string", "description": "回归面：改完要重跑哪些东西" },
+        "recommendation": { "$ref": "#/$defs/recommendation" },
+        "deferred": { "type": ["string", "null"], "description": "用户选择暂缓时：挂账 + 触发条件" }
+      }
+    },
+    "excluded": {
+      "type": "object",
+      "required": ["title", "reason", "kind"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "reason": { "type": "string", "minLength": 4, "description": "为什么否——误报(前提不成立)还是刻意设计(该保留)" },
+        "kind": { "type": "string", "enum": ["false_positive", "intentional"] },
+        "checked": { "type": "boolean", "description": "是否查证过（还是仅推断）" }
+      }
+    }
+  }
+}
