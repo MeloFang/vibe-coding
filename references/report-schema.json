@@ -77,6 +77,63 @@
         "kind": { "type": "string", "enum": ["false_positive", "intentional"] },
         "checked": { "type": "boolean", "description": "是否查证过（还是仅推断）" }
       }
+    },
+    "receipt": {
+      "type": "object",
+      "title": "repair receipt（校验失败时产出的机器可读修复收据）",
+      "description": "借鉴 tt-a1i/archify：校验失败不只打人话，而是产出指明「精确局部修复」的机器可读 JSON。validate_report.py 落盘为 <findings>.receipt.json。",
+      "required": ["receipt", "source", "status", "issues"],
+      "additionalProperties": false,
+      "properties": {
+        "receipt": { "type": "string", "const": "vibe-coding-findings-repair" },
+        "source": { "type": "string", "description": "被校验的 findings.json 路径" },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "status": { "type": "string", "enum": ["passed", "failed", "repaired", "needs_manual_edit"] },
+        "last_good": { "type": ["string", "null"], "description": "archify 纪律：失败保留 last-good；自动修复通过后才原子替换，原文件备份到此路径" },
+        "counts": {
+          "type": "object",
+          "properties": {
+            "issues": { "type": "integer" },
+            "auto_fixable": { "type": "integer", "description": "标 auto=true、可由校验器代劳的条数" },
+            "applied": { "type": "integer" },
+            "findings": { "type": "integer" },
+            "excluded": { "type": "integer" }
+          }
+        },
+        "issues": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/issue" }
+        },
+        "applied": {
+          "type": "array",
+          "description": "本次实际执行的自动修复动作（有边界：确定性、无歧义、不丢信息）",
+          "items": { "$ref": "#/$defs/applied" }
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "required": ["path", "rule", "found", "expected", "repair", "auto"],
+      "additionalProperties": false,
+      "properties": {
+        "path": { "type": "string", "description": "精确位置，JSON 指针风格，如 $.findings[0].verdict" },
+        "rule": { "type": "string", "description": "触发的规则号，如 verdict.enum / ids.sequential / evidence.required" },
+        "found": { "type": "string", "description": "实际值（超长会截断）" },
+        "expected": { "type": "string", "description": "允许的值或形态" },
+        "repair": { "type": "string", "description": "精确局部修复指令：改哪一处的什么，人/Agent 照着改即可" },
+        "auto": { "type": "boolean", "description": "true=属于有边界自动修复，--repair 可代劳；false=必须手工判断" }
+      }
+    },
+    "applied": {
+      "type": "object",
+      "required": ["rule", "action"],
+      "additionalProperties": false,
+      "properties": {
+        "rule": { "type": "string" },
+        "action": { "type": "string", "description": "做了什么（人话）" },
+        "before": { "description": "改动前的值" },
+        "after": { "description": "改动后的值" }
+      }
     }
   }
 }

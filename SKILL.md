@@ -1,6 +1,6 @@
 ---
 name: vibe-coding
-description: Vibe Coding + Real Engineering 工作流，从立项到交付的完整项目流程 + 单功能编码闭环。当用户说"开个新项目 / 从零做一个东西 / 我要立项 / 走完整流程 / 生成产品文档 / 建项目文档 / 做到哪一步了 / 交接给下个会话"，或想用 AI 做项目/功能、写代码、调试、重构、体检架构、查 bug，或说"按 vibe coding 来 / 先对齐 / 烤问 / grill / 跑 TDD / 写测试 / 诊断这个 bug / 固定上下文 / 体检架构 / 扫代码质量 / 先搜 github 有没有现成轮子 / 查重 / 最小实现 / 别过度设计 / 查查有没有 bug / 换人接着做"时使用。融合六个开源上游：vibe-coding-cn（规划驱动、道法术器、单一 AGENTS.md）、mattpocock/skills（设计树对齐、GLOSSARY/ADR、TDD 垂直切片、深模块设计、代码库体检）、anthropics/skills（frontend-design）、obra/superpowers（7 项工程优化）、DietrichGebert/ponytail（最小完整改动）、cloudflare/security-audit-skill（三级裁定 + 机器可读报告）。
+description: Vibe Coding + Real Engineering 工作流，从立项到交付的完整项目流程 + 单功能编码闭环。当用户说"开个新项目 / 从零做一个东西 / 我要立项 / 走完整流程 / 生成产品文档 / 建项目文档 / 做到哪一步了 / 交接给下个会话"，或想用 AI 做项目/功能、写代码、调试、重构、体检架构、查 bug，或说"按 vibe coding 来 / 先对齐 / 烤问 / grill / 跑 TDD / 写测试 / 诊断这个 bug / 固定上下文 / 体检架构 / 扫代码质量 / 先搜 github 有没有现成轮子 / 查重 / 最小实现 / 别过度设计 / 查查有没有 bug / 换人接着做 / 每阶段开新会话 / 校验报告 / 修 findings"时使用。融合九个开源上游：vibe-coding-cn（规划驱动、道法术器、单一 AGENTS.md）、mattpocock/skills（设计树对齐、GLOSSARY/ADR、TDD 垂直切片、深模块设计、代码库体检）、anthropics/skills（frontend-design）、obra/superpowers（7 项工程优化）、DietrichGebert/ponytail（最小完整改动）、cloudflare/security-audit-skill（三级裁定 + 机器可读报告）、ayghri/i-have-adhd（输出约定十条）、tt-a1i/archify（repair receipt：失败即精确局部修复）、humanlayer/skills·rpi（每阶段新会话 + 任务目录）。
 ---
 
 # Vibe Coding + Real Engineering
@@ -20,6 +20,8 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | **"体检架构" / "扫代码质量" / "查查有没有 bug"** | 走 `references/architecture-review.md` |
 | **"有没有现成的轮子" / "别过度设计"** | 走 `references/github-scouting.md` 查重 + `references/smallest-change.md` 最小实现 |
 | "交接 / 换人接着做 / 切会话" | 走 `references/handoff.md` |
+| **"每阶段开新会话" / 会话太长开始忘事** | 走 `references/project-lifecycle.md` 的「每阶段新会话」段 |
+| **"校验报告" / "修 findings"** | 跑 `references/validate_report.py`，照 receipt 定点修 |
 
 ## 路由表：你要做什么 → 读哪个 reference（按工作流分组）
 
@@ -27,6 +29,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | 你要做的 | 读这个 |
 |:---|:---|
 | **开新项目，从立项走到交付** | `references/project-lifecycle.md` ★主干道 |
+| 会话太长/跨天跨人，改「每阶段一个新会话」 | `references/project-lifecycle.md`「每阶段新会话」段 |
 | **要一份项目文档模板**（产品/计划/续接） | `references/project-docs.md` ★ |
 | 仓库初始化、任务状态流转 | `references/repo-setup-and-tasks.md` |
 | 建 `AGENTS.md`（三段式多模型上下文） | `references/AGENTS-template.md` |
@@ -67,9 +70,10 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | **功能做完了，怎么收尾** | `references/finishing-branch.md` ★P0 |
 | 跨会话/跨人接力（生成交接文档） | `references/handoff.md` |
 
-### G. 元规范
+### G. 输出与元规范
 | 你要做的 | 读这个 |
 |:---|:---|
+| **每一轮回复怎么写**（下一步先行、不复述、不客套） | `references/output-conventions.md` ★每轮适用 |
 | 把纪律固化成自己的新技能 | `references/SKILL-spec.md` |
 
 ---
@@ -118,6 +122,17 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 3. **规划** —— **先按 `references/github-scouting.md` 在 GitHub 查重（能抄不写）**，再拆成小步、每步带验收（测试或明确信号），只写指令不写实现。
 4. **分步实现** —— 按 `references/smallest-change.md` 的决策阶梯（能不写就不写 → 代码库已有 → 标准库 → 已装依赖 → 一行 → 最小代码）做**最小完整改动**，一次只改一个模块 / 一步，跑验证；代码一多就切会话（必要时用 `references/handoff.md` 交接）。**测试纪律不变：仍按 `tdd-playbook.md` 红在前。**
 5. **复盘** —— 验证通过再继续；更新上下文 / 进度；可复盘的提交。
+
+## 3. 输出约定（每轮回复都适用，来自 i-have-adhd）
+
+代码侧讲证据，沟通侧讲下一步。**第一句就是下一步动作**——不是背景、不是复述、不是总结。
+
+速记五条（完整十条 + 破例场景见 `references/output-conventions.md`）：
+1. **下一步先行**，结尾只留一个具体动作（带命令/文件/行号）。
+2. **多步就编号**；列表封顶 5 项。
+3. **每轮复述状态**：做到哪 / 下一步 / 卡在哪——且与 `PLAN.md`、`HANDOFF.md` 的落盘状态一致。
+4. **压住跑题**，做完的事要看得见；出错就事论事，不铺垫道歉、不粉饰。
+5. **三不要**：不要开场白、不要复述用户的话、不要结尾客套。
 
 ## 道法术器（心法，来自 vibe-coding-cn）
 
@@ -175,13 +190,16 @@ TDD 完整方法论（好测试的标准、接缝、三个反模式、循环规�
 > 分工：`HANDOFF.md` 是**项目级长期活文档**（讲清程序是什么、进度、怎么接手）；`docs/handoff/` 的是**单次会话临时交接**。两者别混。
 
 ## 来源与深读
-本技能提炼融合自六个开源上游（技能本身已自包含，不依赖本地副本，需深读时按需克隆）：
+本技能提炼融合自九个开源上游（技能本身已自包含，不依赖本地副本，需深读时按需克隆）：
 
 - **`vibe-coding-cn`**（规划驱动、道法术器、单一 `AGENTS.md` 模式）：原仓 [`tradecatlabs/vibe-coding-cn`](https://github.com/tradecatlabs/vibe-coding-cn)（曾用 `tukuaiai/vibe-coding-cn`，已重定向），重点看 `AGENTS.md`、`i18n/zh/prompts/`、`i18n/zh/skills/`。
 - **`mattpocock/skills`**（*Skills For Real Engineers*）：提供本技能大部分方法论内核——设计树对齐（`grilling` / `grill-me` / `grill-with-docs`）、共享语言与领域模型（`domain-modeling`）、TDD 垂直切片（`tdd`）、深模块设计词汇（`codebase-design`）、架构体检（`improve-codebase-architecture`）、会话交接（`handoff`）、仓库初始化（`setup-matt-pocock-skills`）、任务状态机（`triage`）、SKILL.md 写法规范。
 - **`anthropics/skills`**（`frontend-design`）：让 Agent 先定美学方向再写前端，拒绝通用 AI 味设计。
 - **`DietrichGebert/ponytail`**（MIT）：提供 `references/smallest-change.md` 的决策阶梯、Never cut 清单、shortcut 注释约定，以及 `requesting-code-review.md` 的审查三硬规矩与四段式报告格式。（**注意**：ponytail 的"trivial 改动不用测试"不采纳，TDD 红在前不变。）
 - **`cloudflare/security-audit-skill`**（MIT）：提供体检 findings 的三级裁定思想（confirmed / needs_validation / rejected）与"机器可读报告 + schema + 校验器"的产物形态（`report-schema.json` / `validate_report.py`）。
+- **`ayghri/i-have-adhd`**（CC-BY-4.0）：提供 `references/output-conventions.md` 的十条输出纪律（下一步先行、编号、状态复述、具体时间估计、就事论事、列表封顶 5、无开场白/无复述/无客套）与破例场景。
+- **`tt-a1i/archify`**：提供校验器的 **repair receipt** 形态——校验失败不只打人话，而是产出机器可读 JSON 指明"精确的局部修复"（`path`/`rule`/`found`/`expected`/`repair`/`auto`），并沿用其两条交付纪律：**只有通过的产物才原子替换目标**（保留 last-good）、**自动修复限定在有边界范围内**。
+- **`humanlayer/skills`（`rpi`）**：提供"每阶段一个新会话"的设定、`.agents/artifacts/<slug>/` 任务目录与 `NN-` 编号、文档 frontmatter 记 `repos:[{identifier, sha}]`。**不采纳**其"artifacts 不提交"——本技能要求结论回流到 `PLAN.md` / `HANDOFF.md`，见 `project-lifecycle.md`「每阶段新会话」段。
 
 > 本仓库只融合方法论，未复制任何上游的源码或资产。
 

@@ -158,6 +158,50 @@
 
 ---
 
+## 每阶段新会话（借 humanlayer/skills·rpi）
+
+`humanlayer/skills` 的 `rpi`（Research → Plan → Implement）有一条硬设定：**每个阶段默认在独立会话里跑**——"Users run each phase in a separate context window by default."，阶段之间只靠 `.agents/artifacts/<task-slug>/` 下的文档交接，用 `NN-` 前缀编号，文档 frontmatter 带 `repos: [{identifier, sha}]` 记录"这份文档针对哪个仓库的哪个 commit"。
+
+### 它和本流程是什么关系
+
+**同一套"文档即上下文"思路的两个强度档，不冲突：**
+
+| | 本流程（默认） | rpi |
+|:---|:---|:---|
+| 上下文载体 | 仓库里的 `PRODUCT/AGENTS/PLAN/HANDOFF` | `.agents/artifacts/<slug>/NN-*.md` |
+| 会话 | 同一会话可连跑多阶段 | **每阶段一个新会话** |
+| 阶段数 | 六阶段（含立项/验证/续接） | research / prd / tdd / outline / implement |
+| 产物归属 | 提交进仓库 | 作者建议**不提交** |
+
+本流程之所以不强制每阶段新会话，是因为它靠**落盘文档**续接——文档够了，同会话跑完反而更快、更少丢上下文。
+
+**但一旦出现下面任一信号，就该切成"每阶段新会话"**：
+
+- 会话已经很长、开始压缩 / 你发现 Agent 在"忘记前面说过什么"
+- 这个阶段要读大量代码或文档（research 型），读进来只为产出一份结论
+- 阶段之间**结论会污染判断**（例如：先做了大量实现调研，再回去做需求取舍，容易偏向已调研的方案）
+- 任务跨天、跨人
+
+### 切法（照抄 rpi 的可移植部分）
+
+1. **建任务目录**：`.agents/artifacts/<task-slug>/`（分支名或短 kebab-case slug 命名）。可加进 `.gitignore`——**它是工作台，不是交付物**。
+2. **每阶段只喂该阶段需要的文档**：不要让新会话把全部历史都读一遍，只读上一阶段的结论 + 必要代码。
+3. **阶段末写 handoff**：本阶段结论 + 未决项 + 下一步命令，供下一阶段会话开篇读。
+4. **文档 frontmatter 记 `repos: [{identifier, sha}]`** —— 这条值得借：它把"这份结论是针对哪个代码状态得出的"钉死了，相当于本技能 ADR/证据等级的轻量版。**结论回流到 `PLAN.md` / `HANDOFF.md` 时把这个 sha 带上。**
+
+### 取舍：rpi 说"artifacts 不提交"，本技能不照抄
+
+rpi 作者建议不提交 `.agents/artifacts/`——因为它是一次性工作台。
+
+本技能的口径是：**`PRODUCT.md` / `PLAN.md` / `HANDOFF.md` / `AGENTS.md` / `GLOSSARY.md` 必须提交**，它们是"这程序是什么、到哪一步、怎么接手"的唯一记录；只有**单次临时交接**不落仓库（见 `handoff.md`）。
+
+所以兼容做法是：
+
+> `.agents/artifacts/` 当**草稿区**（可 gitignore），但**每个阶段定稿的结论必须回流**到 `PLAN.md` / `HANDOFF.md`（必要时进 ADR）。
+> 别让结论只活在不提交的工作台里——那正是"做着做着忘了要做什么"的复发点。
+
+---
+
 ## 什么时候可以跳过流程
 
 不是所有任务都值得走全流程。按规模选：

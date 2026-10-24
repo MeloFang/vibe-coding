@@ -82,10 +82,17 @@ HTML 给人看，**findings.json 给机器消费**（后续 CI、跨会话对比
 **写完必须过校验**（零依赖，标准库即可）：
 
 ```bash
-python references/validate_report.py <findings.json>
+python references/validate_report.py <findings.json>            # 校验，失败时落 repair receipt
+python references/validate_report.py <findings.json> --repair   # 只让校验器做「有边界的自动修复」
 ```
 
-校验不过（编号断档、confirmed 缺证据、修法含糊）→ 修数据再重跑，不许跳过。校验器自带测试：`python references/test_validate_report.py`（12 项断言，改 schema 时必须全绿）。
+校验不过（编号断档、confirmed 缺证据、修法含糊）→ 修数据再重跑，不许跳过。
+
+**失败时校验器会落一份 `repair receipt`（`<findings>.receipt.json`）**，每条问题都指明**精确的局部修复**：`path`（精确位置）+ `rule`（触发的规则）+ `found`（实际值）+ `expected`（应有值）+ `repair`（照着改的指令）+ `auto`（能否自动修）。照着 `repair` 定点改，**无关结构别动**。
+
+只有 `auto: true` 的项（目前仅 `ids.sequential` 编号重排）能加 `--repair` 让校验器代劳；代劳后还要**复检通过才原子替换**，原文件留 `.bak` 作 last-good——复检没过就放弃替换，绝不落半成品。语义类问题（缺证据、枚举错、修法含糊）一律不自动修，必须你或 Agent 判断。
+
+校验器自带测试：`python references/test_validate_report.py`（18 项断言，改 schema/校验器时必须全绿）。
 
 ### 报告形式要求
 
