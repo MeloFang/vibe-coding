@@ -89,6 +89,7 @@ git clone https://github.com/MeloFang/vibe-coding.git ~/.workbuddy/skills/vibe-c
 你：体检一下这个代码库
 我：三类发现（正确性/架构/决策缺口）→ HTML 报告给你看
     + findings.json（三级裁定，validate_report.py 校验过）给机器消费
+    + coverage-ledger.json 双校验（台账良构 + 基线维度覆盖检查，零发现须显式确认）
 ```
 
 ---
@@ -122,6 +123,8 @@ vibe-coding/
     ├── report-schema.json            #   findings.json + repair receipt 机器可读 Schema
     ├── validate_report.py            #   零依赖校验器（失败即落 repair receipt，--repair 可自动修）
     ├── test_validate_report.py       #   校验器自测（18 项断言）
+    ├── coverage-ledger.json          #   覆盖台账：声明"要审什么"的维度清单（借 security-audit）
+    ├── validate_coverage_ledger.py   #   零依赖双校验（台账良构 + 基线覆盖交叉）
     ├── diagnosing-session.md         # ★ P0 会话诊断：建环→复现→假设→修复
     │
     │  ── E. 协作与并行 ──
@@ -152,7 +155,7 @@ vibe-coding/
 | [anthropics/skills](https://github.com/anthropics/skills) | `frontend-design`：先定美学方向再写前端 | 全部吸收 |
 | [obra/superpowers](https://github.com/obra/superpowers) | 7 项工程优化：会话诊断、分支收尾、子 Agent 并行、Worktree 隔离、任务间审查、接收审查、TDD 强制 | 全部吸收（references 内 7 篇为其改编） |
 | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | 决策阶梯、Never cut 清单、shortcut 注释约定、审查四段式 + 全局编号 + Verdict | **不采纳**"trivial 改动不用测试"——TDD 红在前不变 |
-| [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill) | 三级裁定（confirmed / needs_validation / rejected）、机器可读报告 + schema + 校验器形态 | 只借裁定思想与产物形态；full-audit 沙盒流程未引入 |
+| [cloudflare/security-audit-skill](https://github.com/cloudflare/security-audit-skill) | 三级裁定（confirmed / needs_validation / rejected）、机器可读报告 + schema + 校验器形态、**coverage-ledger 覆盖台账**（声明应审维度 + 双校验 + 候选交独立验证者证伪） | 借裁定思想、产物形态与覆盖台账；full-audit 沙盒流程未引入 |
 | [ayghri/i-have-adhd](https://github.com/ayghri/i-have-adhd) | 十条输出纪律：下一步先行、编号、状态复述、具体时间估计、就事论事、列表封顶 5、无开场白/复述/客套 | 全部吸收为 `output-conventions.md`，并补了破例场景（教学、复盘、落盘文档除外） |
 | [tt-a1i/archify](https://github.com/tt-a1i/archify) | **repair receipt**：校验失败产出机器可读 JSON 指明"精确局部修复"；只有通过的产物才原子替换目标、失败保留 last-good；自动修复限定在有边界范围内 | 借其收据形态与两条交付纪律；自动修复只开放 `ids.sequential` 一项，语义问题一律留给人工判断 |
 | [humanlayer/skills](https://github.com/humanlayer/skills)（`rpi`） | 每阶段一个新会话、`.agents/artifacts/<slug>/` 任务目录 + `NN-` 编号、文档 frontmatter 记 `repos:[{identifier, sha}]` | 作为**可选强度档**写入 `project-lifecycle.md`；**不采纳**"artifacts 不提交"——结论须回流到 `PLAN.md`/`HANDOFF.md` |

@@ -1,0 +1,125 @@
+{
+  "ledger": "vibe-coding-architecture-review-coverage",
+  "version": 1,
+  "description": "代码库体检应覆盖维度的声明台账。借 cloudflare/security-audit-skill 的 coverage-ledger 思想：本台账是『我们声称要审什么』的唯一真相源；findings.json 是『我们实际审出了什么』。两者交叉校验即知覆盖是否完整——缺哪一类、哪条基线维度本会话零发现，一眼可见。",
+  "categories": ["correctness", "architecture", "decision_gap"],
+  "dimensions": [
+    {
+      "id": "C1",
+      "name": "顺序依赖（过滤/抑制/校验跑在依赖它们的步骤之前）",
+      "category": "correctness",
+      "description": "过滤、抑制或校验逻辑在依赖它们的步骤之前执行，导致合法输入被提前淘汰。优先级最高、最易漏看。",
+      "severity_if_skipped": "high",
+      "covered_by": "references/architecture-review.md",
+      "always": true
+    },
+    {
+      "id": "C2",
+      "name": "边界值处理（max_len / 长度上限临界点前后行为不一致）",
+      "category": "correctness",
+      "description": "长度上限、索引边界等临界点前后行为不一致，产生 off-by-one 或静默截断。",
+      "severity_if_skipped": "high",
+      "covered_by": "references/architecture-review.md",
+      "always": true
+    },
+    {
+      "id": "C3",
+      "name": "名字与行为不符（变量名承诺了一件事，代码做了另一件）",
+      "category": "correctness",
+      "description": "标识符、函数名、契约名承诺的行为与实际实现不符，误导调用方。",
+      "severity_if_skipped": "high",
+      "covered_by": "references/architecture-review.md",
+      "always": true
+    },
+    {
+      "id": "A1",
+      "name": "浅模块（删除测试：删掉它复杂度是集中还是平移）",
+      "category": "architecture",
+      "description": "接口复杂度几乎等于实现复杂度的浅模块，是否值得存在。用删除测试判断。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": false
+    },
+    {
+      "id": "A2",
+      "name": "理解跨度（理解一个概念要在多少小模块间来回跳）",
+      "category": "architecture",
+      "description": "高理解跨度说明职责切得太碎，locality 差。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": false
+    },
+    {
+      "id": "A3",
+      "name": "缺 locality（纯函数为可测性抽出，bug 藏在怎么被调用）",
+      "category": "architecture",
+      "description": "纯函数只为可测性抽出，但真实 bug 在调用方式（缺 locality）。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": false
+    },
+    {
+      "id": "A4",
+      "name": "跨接缝紧耦合泄漏",
+      "category": "architecture",
+      "description": "紧耦合模块跨接缝泄漏内部细节，破坏深模块封装。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": false
+    },
+    {
+      "id": "A5",
+      "name": "同一概念多处重复实现（且风格不一）",
+      "category": "architecture",
+      "description": "同一概念在多处各写一遍、还用了不同风格，是漂移与 bug 温床。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": false
+    },
+    {
+      "id": "D1",
+      "name": "悬空配置/开关/feature flag（声明了但零读取点=假承诺）",
+      "category": "decision_gap",
+      "description": "配置/开关/flag 声明了但代码里没有任何读取点，是产品决策不是 bug，须交用户拍板。",
+      "severity_if_skipped": "high",
+      "covered_by": "references/architecture-review.md",
+      "always": true
+    },
+    {
+      "id": "D2",
+      "name": "变量名/契约与实际传值不符",
+      "category": "decision_gap",
+      "description": "声明了三个注入变量实际调用方都传同一个，或契约名与实际传值不符。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": true
+    },
+    {
+      "id": "M1",
+      "name": "证据等级/三级裁定（每条 finding 必带 verdict）",
+      "category": "correctness",
+      "description": "报告完整性纪律：每条发现必须有 confirmed/needs_validation/rejected 裁定，由 validate_report.py 的 schema 强制。",
+      "severity_if_skipped": "high",
+      "covered_by": "references/validate_report.py",
+      "always": true
+    },
+    {
+      "id": "M2",
+      "name": "已排除区（判定『不是问题』的必须记录）",
+      "category": "architecture",
+      "description": "避免下次体检重复论证同一件事。误报与刻意设计分开记录。",
+      "severity_if_skipped": "medium",
+      "covered_by": "references/architecture-review.md",
+      "always": true
+    },
+    {
+      "id": "M3",
+      "name": "实测复现（影响正确性的 confirmed 必填 evidence）",
+      "category": "correctness",
+      "description": "影响正确性的发现一律要实测复现，confirmed 须带输入→实际→期望。由 validate_report.py 的 evidence.required 规则强制。",
+      "severity_if_skipped": "high",
+      "covered_by": "references/validate_report.py",
+      "always": true
+    }
+  ]
+}

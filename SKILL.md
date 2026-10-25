@@ -54,6 +54,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 |:---|:---|
 | **代码库体检**（找 bug / 浅模块 / 决策缺口 → HTML + findings.json） | `references/architecture-review.md` |
 | findings.json 机器可读格式与校验 | `references/report-schema.json` + `references/validate_report.py` |
+| **覆盖台账**（声明"要审什么" + 双校验基线覆盖） | `references/coverage-ledger.json` + `references/validate_coverage_ledger.py` |
 | **会话出问题了，诊断一下** | `references/diagnosing-session.md` ★P0 |
 
 ### E. 协作与并行（多 Agent / 多分支）
@@ -196,7 +197,7 @@ TDD 完整方法论（好测试的标准、接缝、三个反模式、循环规�
 - **`mattpocock/skills`**（*Skills For Real Engineers*）：提供本技能大部分方法论内核——设计树对齐（`grilling` / `grill-me` / `grill-with-docs`）、共享语言与领域模型（`domain-modeling`）、TDD 垂直切片（`tdd`）、深模块设计词汇（`codebase-design`）、架构体检（`improve-codebase-architecture`）、会话交接（`handoff`）、仓库初始化（`setup-matt-pocock-skills`）、任务状态机（`triage`）、SKILL.md 写法规范。
 - **`anthropics/skills`**（`frontend-design`）：让 Agent 先定美学方向再写前端，拒绝通用 AI 味设计。
 - **`DietrichGebert/ponytail`**（MIT）：提供 `references/smallest-change.md` 的决策阶梯、Never cut 清单、shortcut 注释约定，以及 `requesting-code-review.md` 的审查三硬规矩与四段式报告格式。（**注意**：ponytail 的"trivial 改动不用测试"不采纳，TDD 红在前不变。）
-- **`cloudflare/security-audit-skill`**（MIT）：提供体检 findings 的三级裁定思想（confirmed / needs_validation / rejected）与"机器可读报告 + schema + 校验器"的产物形态（`report-schema.json` / `validate_report.py`）。
+- **`cloudflare/security-audit-skill`**（MIT）：提供体检 findings 的三级裁定思想（confirmed / needs_validation / rejected）与"机器可读报告 + schema + 校验器"的产物形态（`report-schema.json` / `validate_report.py`）；进一步借其 **coverage-ledger** 思想补上"覆盖盲区"这一洞——`coverage-ledger.json` 声明应审维度、`validate_coverage_ledger.py` 做双校验（台账良构 + 基线覆盖交叉），并沿用其"每个候选交给独立验证者证伪"的纪律（见 `architecture-review.md`）。
 - **`ayghri/i-have-adhd`**（CC-BY-4.0）：提供 `references/output-conventions.md` 的十条输出纪律（下一步先行、编号、状态复述、具体时间估计、就事论事、列表封顶 5、无开场白/无复述/无客套）与破例场景。
 - **`tt-a1i/archify`**：提供校验器的 **repair receipt** 形态——校验失败不只打人话，而是产出机器可读 JSON 指明"精确的局部修复"（`path`/`rule`/`found`/`expected`/`repair`/`auto`），并沿用其两条交付纪律：**只有通过的产物才原子替换目标**（保留 last-good）、**自动修复限定在有边界范围内**。
 - **`humanlayer/skills`（`rpi`）**：提供"每阶段一个新会话"的设定、`.agents/artifacts/<slug>/` 任务目录与 `NN-` 编号、文档 frontmatter 记 `repos:[{identifier, sha}]`。**不采纳**其"artifacts 不提交"——本技能要求结论回流到 `PLAN.md` / `HANDOFF.md`，见 `project-lifecycle.md`「每阶段新会话」段。

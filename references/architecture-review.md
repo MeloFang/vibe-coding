@@ -94,6 +94,18 @@ python references/validate_report.py <findings.json> --repair   # 只让校验�
 
 校验器自带测试：`python references/test_validate_report.py`（18 项断言，改 schema/校验器时必须全绿）。
 
+### 覆盖台账（借 security-audit 的 coverage-ledger）
+
+上面三级裁定解决了"每条发现可不可信"，但没解决"**该审的维度有没有审全**"。一个维度没查，报告里也不会有任何信号——这就漏了。借 cloudflare/security-audit-skill 的 coverage-ledger 思想补这一层：
+
+- **台账是"我们声称要审什么"的唯一真相源**：`references/coverage-ledger.json` 声明了体检应覆盖的全部维度（C 正确性 / A 架构 / D 决策缺口 / M 报告完整性），每条带 `severity_if_skipped`（跳过它的代价）和 `always`（是否每会话必查的基线）。
+- **双校验**：
+  1. **台账自身良构（第一道）**：`python references/validate_coverage_ledger.py references/coverage-ledger.json` —— 维度 id 不重复、类别/严重度合法、`covered_by` 指向的文件确实存在。
+  2. **覆盖交叉校验（第二道，可选）**：`python references/validate_coverage_ledger.py references/coverage-ledger.json --findings <findings.json>` —— 列出每个 `always:true` 基线维度本会话有没有覆盖；**零发现不等于"审过了"**，必须显式确认本范围确实不含该风险、或在报告写明跳过理由。纯提示，不阻断出报告。
+- **纪律：每个候选交给独立验证者证伪。** security-audit 的关键手法——每条候选发现不交给原探索者"证真"，而是交给一个独立（最好新会话）的验证者，其**唯一任务是否定它**：找反例、找前提不成立的证据。只有"证伪失败"的候选才升级为 finding。这直接强化了本文件阶段一的铁律一（子 Agent 的发现是假设不是事实）：探索者与验证者分离，避免"自己提的自己信"。
+
+> 台账与 findings 是两份独立文件，刻意不互填字段：台账只声明"要审什么"，findings 只记录"审出了什么"。交叉校验时按 `category` 软匹配（findings 不带 `ledger_id`，保持 schema 简单），所以第二道是**提示性**的——它告诉你"哪些基线维度本会话零发现"，由人判断是否真没有。
+
 ### 报告形式要求
 
 - **Tailwind CDN** 做布局，**Mermaid CDN** 画图。
@@ -206,4 +218,5 @@ python references/validate_report.py <findings.json> --repair   # 只让校验�
 - [ ] 架构词没漂移成"组件 / 服务 / API / 边界"？
 - [ ] **没在报告阶段就急着给接口设计**？
 - [ ] 暂缓项写了挂账 + 触发条件？决策缺口单独提请用户拍板？
+- [ ] **`coverage-ledger.json` 维度已声明 + `validate_coverage_ledger.py` 通过**？`always:true` 基线维度本会话的覆盖情况已确认（零发现须显式确认或写明跳过理由）？
 - [ ] 声明了"本次只读，未改代码"？
