@@ -1,6 +1,6 @@
 ---
 name: vibe-coding
-description: Vibe Coding + Real Engineering 工作流，从立项到交付的完整项目流程 + 单功能编码闭环。当用户说"开个新项目 / 从零做一个东西 / 我要立项 / 走完整流程 / 生成产品文档 / 建项目文档 / 做到哪一步了 / 交接给下个会话"，或想用 AI 做项目/功能、写代码、调试、重构、体检架构、查 bug，或说"按 vibe coding 来 / 先对齐 / 烤问 / grill / 跑 TDD / 写测试 / 诊断这个 bug / 固定上下文 / 体检架构 / 扫代码质量 / 先搜 github 有没有现成轮子 / 查重 / 最小实现 / 别过度设计 / 查查有没有 bug / 换人接着做 / 每阶段开新会话 / 校验报告 / 修 findings"时使用。融合九个开源上游：vibe-coding-cn（规划驱动、道法术器、单一 AGENTS.md）、mattpocock/skills（设计树对齐、GLOSSARY/ADR、TDD 垂直切片、深模块设计、代码库体检）、anthropics/skills（frontend-design）、obra/superpowers（7 项工程优化）、DietrichGebert/ponytail（最小完整改动）、cloudflare/security-audit-skill（三级裁定 + 机器可读报告）、ayghri/i-have-adhd（输出约定十条）、tt-a1i/archify（repair receipt：失败即精确局部修复）、humanlayer/skills·rpi（每阶段新会话 + 任务目录）。
+description: Vibe Coding + Real Engineering 工作流，从立项到交付的完整项目流程 + 单功能编码闭环。当用户说"开个新项目 / 从零做一个东西 / 我要立项 / 走完整流程 / 生成产品文档 / 建项目文档 / 做到哪一步了 / 交接给下个会话"，或想用 AI 做项目/功能、写代码、调试、重构、体检架构、查 bug，或说"按 vibe coding 来 / 先对齐 / 烤问 / grill / 深度探针 / 做得更深 / 更深不是更大 / 跑 TDD / 写测试 / 诊断这个 bug / 固定上下文 / 体检架构 / 扫代码质量 / 先搜 github 有没有现成轮子 / 查重 / 最小实现 / 别过度设计 / 查查有没有 bug / 换人接着做 / 每阶段开新会话 / 校验报告 / 修 findings"时使用。融合九个开源上游：vibe-coding-cn（规划驱动、道法术器、单一 AGENTS.md）、mattpocock/skills（设计树对齐、GLOSSARY/ADR、TDD 垂直切片、深模块设计、代码库体检）、anthropics/skills（frontend-design）、obra/superpowers（7 项工程优化）、DietrichGebert/ponytail（最小完整改动）、cloudflare/security-audit-skill（三级裁定 + 机器可读报告）、ayghri/i-have-adhd（输出约定十条）、tt-a1i/archify（repair receipt：失败即精确局部修复）、humanlayer/skills·rpi（每阶段新会话 + 任务目录）。
 ---
 
 # Vibe Coding + Real Engineering
