@@ -77,6 +77,23 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 | **每一轮回复怎么写**（下一步先行、不复述、不客套） | `references/output-conventions.md` ★每轮适用 |
 | 把纪律固化成自己的新技能 | `references/SKILL-spec.md` |
 
+## DSH 宿主对照（本技能里的通用说法 → 本宿主的做法）
+
+本技能移植自 WorkBuddy，方法论与宿主无关；只有工具名要按这张表落地。
+
+| 技能里的说法 | DSH 里怎么做 |
+|:---|:---|
+| 规划 / 拆小步 | `todo_write` 落计划；方案需要用户点头时进 plan 模式，用 `exit_plan_mode` 提交 |
+| 子 Agent / 并行实现 | `subagent`（独立上下文，适合干净任务）或 `subagent_fork`（带当前上下文） |
+| 切会话 / 交接 | 新开会话，按 `references/handoff.md` 写交接文档；本会话历史不跨会话 |
+| 跑命令 / 跑测试 | `pwsh`（Windows 上是 PowerShell）；长任务用后台 job，别阻塞主流程 |
+| 定位代码 | `grep` 搜内容、`glob` 找文件，别用 shell 的 find/grep |
+| 改代码 | 先 `read` 看清，再用 `edit` 做定点替换；只有新建才用 `write` |
+| 交付产物 | 文档/表格/图片用 `present` 交给用户，路径用相对工作区的链接 |
+| 校验 findings | `pwsh` 跑 `python references/validate_report.py <findings.json>`（本机 Python 3.13 可用） |
+
+> 读 `references/` 时遇到别的宿主的工具名（`Task`、`/agent`、`TodoWrite`、`tmux`），按上表换成 DSH 对应做法。
+
 ---
 
 ## 1. 项目全生命周期（开新项目时走这条）
@@ -140,7 +157,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 - **道（原则）**：规划就是一切；上下文是第一性（垃圾进垃圾出）；奥卡姆剃刀、帕累托、逆向思考；先结构后代码。
 - **法（方法）**：一句话目标 + 非目标；能抄不写（动手前先按 `references/github-scouting.md` 搜 GitHub 有没有现成仓库 / 库）；接口先行、实现后补；一次只改一个模块；文档即上下文。
 - **术（技巧）**：明确"能改什么 / 不能改什么"；Debug 只给"预期 vs 实际 + 最小复现"；测试交给 AI 但断言人审；代码一多就切会话。
-- **器（工具）**：复杂任务选第一梯队模型；Claude Code / Codex / Cursor / WorkBuddy 等 CLI 优先；tmux 多会话、Ollama 本地模型等。
+- **器（工具）**：复杂任务选第一梯队模型；CLI 型 Agent（DSH 桌面端 / `dsh web` / `dsh tui`）优先；并行任务拆给子 Agent；敏感数据走本地模型。
 
 ## 四大纪律（对应四大失败模式）
 
@@ -157,7 +174,7 @@ description: Vibe Coding + Real Engineering 工作流，从立项到交付的完
 - 验收标准是什么（怎么算"做对了"）？
 - 风险点 / 不确定项有哪些？
 
-轻量任务用上面四条就够。**复杂需求别只问一轮**——按"设计树 + 前沿"多轮追问，详见 `references/alignment-deep-dive.md`（含每轮提问格式、事实 vs 决策分工、边问边沉淀术语表与 ADR 的门槛）。
+轻量任务用上面四条就够。**复杂需求别只问一轮**——按"设计树 + 前沿"多轮追问，详见 `references/alignment-deep-dive.md`（含每轮提问格式、事实 vs 决策分工、边问边沉淀术语表与 ADR 的门槛）。**需求模糊或想做得更深时，可先跑该文的「深度探针」让 AI 主动掀出专家盲区与验证证据，再进入设计树**——核心是「更深不是更大」。
 
 ### 反馈环（TDD / 诊断）铁律
 - **红在前**：先写失败测试 / 失败信号，再写最少代码让它绿；不预支未来测试。
